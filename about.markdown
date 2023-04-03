@@ -4,15 +4,8 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+Hi there! I am Piyush. I am an entrepreneur with a couple of scar marks, a developer with over 4 yrs of experience in software development (backend and infra) and a dreamer who is living in the future. 
+I am alwasy experimenting with ideas or building something. I live by the moto <i>fail fast, fail often</i>. Whatever I learn is just kept in a bookmark, notion page or google docs somewhere, only
+to be never revisited again. My aim with this website is to share my life experiences, learnings and milestones with the world, and with my future self.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+Have any feedback, queries or just want to in touch. Drop me an email, always happy to connect!
