@@ -1,82 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-04-06T18:29:12+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Codex</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Draft - Future of AI</title><link href="http://localhost:4000/jekyll/update/2023/04/01/draft-copy-2.html" rel="alternate" type="text/html" title="Draft - Future of AI" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/draft%20copy%202</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/draft-copy-2.html"><![CDATA[<ol>
-  <li>
-    <p>the current state of metaverse
- i. My experience
- ii. Plans of the big players
- iii. Startups in stealth</p>
-  </li>
-  <li>
-    <p>what’s missing
- i. John carmack leaving meta
- ii. Time saying they were wrong
- iii. Low graphic video game</p>
-  </li>
-  <li>
-    <p>how to improve
- i. gaming is the first step
- ii. strong social media (zero cost) -&gt; paid weak social media
- iii. things that replace reality quite well (movies, tv series, growth)
- iv. path to growth (provide utility -&gt; form networks/ community -&gt; engage)</p>
-  </li>
-</ol>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[the current state of metaverse i. My experience ii. Plans of the big players iii. Startups in stealth]]></summary></entry><entry><title type="html">Draft - Tumblr’s decline</title><link href="http://localhost:4000/jekyll/update/2023/04/01/draft-copy.html" rel="alternate" type="text/html" title="Draft - Tumblr’s decline" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/draft%20copy</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/draft-copy.html"><![CDATA[<ol>
-  <li>
-    <p>the current state of metaverse
- i. My experience
- ii. Plans of the big players
- iii. Startups in stealth</p>
-  </li>
-  <li>
-    <p>what’s missing
- i. John carmack leaving meta
- ii. Time saying they were wrong
- iii. Low graphic video game</p>
-  </li>
-  <li>
-    <p>how to improve
- i. gaming is the first step
- ii. strong social media (zero cost) -&gt; paid weak social media
- iii. things that replace reality quite well (movies, tv series, growth)
- iv. path to growth (provide utility -&gt; form networks/ community -&gt; engage)</p>
-  </li>
-</ol>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[the current state of metaverse i. My experience ii. Plans of the big players iii. Startups in stealth]]></summary></entry><entry><title type="html">Draft - Building the metaverse</title><link href="http://localhost:4000/jekyll/update/2023/04/01/draft.html" rel="alternate" type="text/html" title="Draft - Building the metaverse" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/draft</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/draft.html"><![CDATA[<ol>
-  <li>
-    <p>the current state of metaverse
- i. My experience
- ii. Plans of the big players
- iii. Startups in stealth</p>
-  </li>
-  <li>
-    <p>what’s missing
- i. John carmack leaving meta
- ii. Time saying they were wrong
- iii. Low graphic video game</p>
-  </li>
-  <li>
-    <p>how to improve
- i. gaming is the first step
- ii. strong social media (zero cost) -&gt; paid weak social media
- iii. things that replace reality quite well (movies, tv series, growth)
- iv. path to growth (provide utility -&gt; form networks/ community -&gt; engage)</p>
-  </li>
-</ol>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[the current state of metaverse i. My experience ii. Plans of the big players iii. Startups in stealth]]></summary></entry><entry><title type="html">Welcome to Jekyll!</title><link href="http://localhost:4000/jekyll/update/2023/04/01/welcome-draft.html" rel="alternate" type="text/html" title="Welcome to Jekyll!" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/welcome-draft</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/welcome-draft.html"><![CDATA[<p>You’ll find this post in your <code class="language-plaintext highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="language-plaintext highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-04-08T03:35:47+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Race for an AI marketplace</title><link href="http://localhost:4000/jekyll/update/2023/04/07/race-for-ai.html" rel="alternate" type="text/html" title="Race for an AI marketplace" /><published>2023-04-07T20:44:32+05:30</published><updated>2023-04-07T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/07/race-for-ai</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/07/race-for-ai.html"><![CDATA[<p>AI research is going so fast that even the adult industry is having a tough time catching up. Every day there’s a brand new paper on different AI architecture and yesterday I saw a paper by HuggingFace for a model that can communicate with all the different models present on the platform and with time will learn what model to use with what query. It’s moving fast enough to convince many top tech people that we will reach AGI in the next 5 years! that’s wild. Although I feel we might still have a decade or so before we reach there, but we can definitely get pretty close in the next couple of years.</p>
 
-<p>Jekyll requires blog post files to be named according to the following format:</p>
+<p>So what’s next in AI? I believe the next goal is to make it much more integrated into our life. We want AI to take care of our finances, groceries, research, entertainment, and life in general. We want a PERSONAL ASSISTANT in our pocket. There will be a unified layer that will communicate through all the different oracles and entities on our behalf of us. For this layer to be personal and intimate, it can’t be just any other piece of technology it has to feel personal. OpenAI has figured this out and is going for the takedown.</p>
 
-<p><code class="language-plaintext highlighter-rouge">YEAR-MONTH-DAY-title.MARKUP</code></p>
+<p><img src="/asset/images/ai_landscape.png" alt="AI Landscape" /></p>
 
-<p>Where <code class="language-plaintext highlighter-rouge">YEAR</code> is a four-digit number, <code class="language-plaintext highlighter-rouge">MONTH</code> and <code class="language-plaintext highlighter-rouge">DAY</code> are both two-digit numbers, and <code class="language-plaintext highlighter-rouge">MARKUP</code> is the file extension representing the format used in the file. After that, include the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+<p>You must be thinking, but wait a minute OpenAI doesn’t have an AI with personality. I think it’s going to have one very soon. Look at the tweet below.</p>
 
-<p>Jekyll also offers powerful support for code snippets:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Startups developing AI characters lookout. Filled this OpenAI survey and I think I know what&#39;s next. <a href="https://t.co/uStZNpLLUg">pic.twitter.com/uStZNpLLUg</a></p>&mdash; Piyush Kumar (@thisispiyushK) <a href="https://twitter.com/thisispiyushK/status/1644247755483754496?ref_src=twsrc%5Etfw">April 7, 2023</a></blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
-<span class="k">end</span>
-<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
-<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+<p>Obviously, there won’t be just one company with this powerful AI, and seeing the pace of development it is very much possible that developers would be able to create their own AI for niche use cases. The good strategy therefore could be to aggregate these niche AIs on a single platform. This marketplace won’t be competing with the likes of OpenAI, Meta, or Google. Quora released it’s own platform <a href="https://techcrunch.com/2023/02/06/quora-opens-its-new-ai-chatbot-app-poe-to-the-general-public/">Poe</a> a couple of months back and recently <a href="https://www.fixie.ai/">Fixie</a>, a startup in the similar direction picked up $17 million in funding</p>
 
-<p>Check out the <a href="https://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run jekyll serve, which launches a web server and auto-regenerates your site when a file is updated.]]></summary></entry><entry><title type="html">Attention is all you need</title><link href="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html"><![CDATA[<p>With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one),
+<p>Who wins the AI wars is yet to be seen. It could very easily be the case that going above the current reasoning capacity of GPT-4 is not even possible with neural nets or that the entire internet’s data is not enough to train the next big AI. I will be following this space and will be sharing some small projects that I am building along the way.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[AI research is going so fast that even the adult industry is having a tough time catching up. Every day there’s a brand new paper on different AI architecture and yesterday I saw a paper by HuggingFace for a model that can communicate with all the different models present on the platform and with time will learn what model to use with what query. It’s moving fast enough to convince many top tech people that we will reach AGI in the next 5 years! that’s wild. Although I feel we might still have a decade or so before we reach there, but we can definitely get pretty close in the next couple of years.]]></summary></entry><entry><title type="html">Attention is all you need</title><link href="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html"><![CDATA[<p>With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one),
 technology is getting commoditized. At least the ones over which the current multi-billion dollar platforms are built upon. We find ourselves in a
-sea of open-source projects, all built with the same building same blocks in some sense. It didn’t take LLMs long to figure out the patterns
+sea of open-source projects, all built with the same building blocks in some sense. It didn’t take LLMs long to figure out the patterns
 and start coding in a near-human level capacity. The future may still be a little further when anyone who wants to code, can code. But we are
 almost there, as almost anyone who wants to code can code and build products right now. Knowledge is available for free on the Internet.</p>
 
@@ -84,4 +21,4 @@ almost there, as almost anyone who wants to code can code and build products rig
 they churn out eventually. In this day and age, attention is one of the very strong moats any business can have. Whether it’s a newsletter, YouTube 
 channel, or Twitter account, as long as it has the right audience it has a potential revenue stream.</p>
 
-<p>Big businesses (especially big tech) have realized this and are buying media houses left and right. Hustle’s acquisition by Hubspot is an example of this. Although big businesses don’t have to worry too much about generating revenue but having a media arm that connects with the audience in a genuine manner is very important. People see an ad from a mile away. This is the new approach of creating a community, buy an existing one. The smart move for current entrepreneurs I believe too is to create a community that they can monetize or at the very least try to develop a following.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one), technology is getting commoditized. At least the ones over which the current multi-billion dollar platforms are built upon. We find ourselves in a sea of open-source projects, all built with the same building same blocks in some sense. It didn’t take LLMs long to figure out the patterns and start coding in a near-human level capacity. The future may still be a little further when anyone who wants to code, can code. But we are almost there, as almost anyone who wants to code can code and build products right now. Knowledge is available for free on the Internet.]]></summary></entry></feed>
+<p>Big businesses (especially big tech) have realized this and are buying media houses left and right. Hustle’s acquisition by Hubspot is an example of this. Although big businesses don’t have to worry too much about generating revenue but having a media arm that connects with the audience in a genuine manner is very important. People see an ad from a mile away. This is the new approach of creating a community, buy an existing one. The smart move for current entrepreneurs I believe too is to create a community that they can monetize or at the very least try to develop a following.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one), technology is getting commoditized. At least the ones over which the current multi-billion dollar platforms are built upon. We find ourselves in a sea of open-source projects, all built with the same building blocks in some sense. It didn’t take LLMs long to figure out the patterns and start coding in a near-human level capacity. The future may still be a little further when anyone who wants to code, can code. But we are almost there, as almost anyone who wants to code can code and build products right now. Knowledge is available for free on the Internet.]]></summary></entry></feed>

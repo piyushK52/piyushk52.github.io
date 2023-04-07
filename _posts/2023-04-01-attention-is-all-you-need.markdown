@@ -7,7 +7,7 @@ categories: jekyll update
 
 With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one),
 technology is getting commoditized. At least the ones over which the current multi-billion dollar platforms are built upon. We find ourselves in a
-sea of open-source projects, all built with the same building same blocks in some sense. It didn't take LLMs long to figure out the patterns
+sea of open-source projects, all built with the same building blocks in some sense. It didn't take LLMs long to figure out the patterns
 and start coding in a near-human level capacity. The future may still be a little further when anyone who wants to code, can code. But we are
 almost there, as almost anyone who wants to code can code and build products right now. Knowledge is available for free on the Internet. 
 
