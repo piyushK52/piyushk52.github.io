@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>System Design of my social media app | Learning Repository</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="System Design of my social media app" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP." />
+<meta property="og:description" content="Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP." />
+<link rel="canonical" href="http://localhost:4000/jekyll/update/2023/04/12/unfiltr_system_design.html" />
+<meta property="og:url" content="http://localhost:4000/jekyll/update/2023/04/12/unfiltr_system_design.html" />
+<meta property="og:site_name" content="Learning Repository" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-04-12T22:55:00+05:30" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="System Design of my social media app" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-04-12T22:55:00+05:30","datePublished":"2023-04-12T22:55:00+05:30","description":"Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP.","headline":"System Design of my social media app","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/jekyll/update/2023/04/12/unfiltr_system_design.html"},"url":"http://localhost:4000/jekyll/update/2023/04/12/unfiltr_system_design.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Learning Repository" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">System Design of my social media app</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2023-04-12T22:55:00+05:30" itemprop="datePublished">Apr 12, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/unfiltr_2.webp" alt="App Screenshot" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>Let’s start with the tech challenges that we needed to solve.</p>
+<ul>
+  <li>Feed should load as quickly as possible</li>
+  <li>Reactions and comments should also be visible with minimal delay</li>
+  <li>Feed should be customized per user (just basic personalization for now)</li>
+</ul>
+
+<p>Remember, this was just an MVP and we only had about a month and a half to roll everything out, so some of the solutions might seem a little hackish but it worked for us. Since this was a read-heavy system we cached most of the stuff. All the posts were updated in follower feeds and directly served from the cache after a couple of joins.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/tweet_normal_user.png" alt="Tweet update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>One drawback with this approach is that if a user has a large number of followers this update can be slow. Therefore to tackle that, what we did was to update the celebrity posts at the time of fetching the user feed. We checked what celebrities the user is following and then added their most recent post in the user feed. In larger systems, there might be a completely separate logic for handling which post should be added (maybe it’s the most interesting to the user or with the most number of likes or a mix of the two).</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/celebrity_user.png" alt="Tweet update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>For storing reactions and comments we used the same formula. We cached most of the stuff. Whenever an update was made we updated both the SQL and the cache. Normally when the system scales, these SQL updates will need to be batched or else it will overtax the DB. We followed a simple schema for storing these.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/reaction_cache_schema.png" alt="Cache Schema" style="height: 100%; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>Now for customizing the main user feed we kept it simple. Ideally, different ML pipelines work over the interaction data of the user along with other parameters to achieve this. But we just gave a score to different interaction events like tap, share, comment, and like and generated a rank based on the weighted score (just making an MVP here). The interaction data was put in a Kinesis stream and then in intervals of 30 minutes, the data was batched and written into S3 files. Our backend would pick this data at regular intervals and update the post scores.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/kinesis_data.png" alt="Kinesis update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>Apart from this, there were other optimizations like batching the notifications when it exceeds a particular threshold, converting profile images to lower resolution for loading thumbnails, making a Jenkins task trigger at a random time, etc. To keep things streamlined we used Terraform for managing the infra. This was my second time working this it and I was really impressed by how much efficient it was compared to manually tinkering with the GUI.</p>
+
+<p>Though I enjoyed working on the project, we couldn’t make it grow. Social media is one of my favorite fields to work in and I hope I get a chance to make something worthwhile in the future.</p>
+
+  </div><a class="u-url" href="/jekyll/update/2023/04/12/unfiltr_system_design.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Learning Repository</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Learning Repository</li><li><a class="u-email" href="mailto:piyush.kumar.iaf@gmail.com">piyush.kumar.iaf@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/piyushK52"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">piyushK52</span></a></li><li><a href="https://www.twitter.com/thisispiyushK"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">thisispiyushK</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Personal thoughts on what I see around. </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
