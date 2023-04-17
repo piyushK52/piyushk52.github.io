@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-04-17T21:55:49+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Thoughts on the metaverse</title><link href="http://localhost:4000/jekyll/update/2023/04/17/metaverse.html" rel="alternate" type="text/html" title="Thoughts on the metaverse" /><published>2023-04-17T21:54:32+05:30</published><updated>2023-04-17T21:54:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/17/metaverse</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/17/metaverse.html"><![CDATA[<p>I have been using the Oculus Quest 2, on and off for about 1 year now. The first time I used it I was blown away. I thought to myself, this is definitely the future. Weirdly enough, when I discussed it with my friends and even the reviews online, no one particularly seems to enjoy it. “It’s a poorly designed gaming system” - this is the typical response that I got. Later in this post, I will delve into potential enhancements for broader adoption, as well as fundamental paradigm shifts that may be necessary.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-04-17T21:56:51+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Thoughts on the metaverse</title><link href="http://localhost:4000/jekyll/update/2023/04/17/metaverse.html" rel="alternate" type="text/html" title="Thoughts on the metaverse" /><published>2023-04-17T21:54:32+05:30</published><updated>2023-04-17T21:54:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/17/metaverse</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/17/metaverse.html"><![CDATA[<p>I have been using the Oculus Quest 2, on and off for about 1 year now. The first time I used it I was blown away. I thought to myself, this is definitely the future. Weirdly enough, when I discussed it with my friends and even the reviews online, no one particularly seems to enjoy it. “It’s a poorly designed gaming system” - this is the typical response that I got. Later in this post, I will delve into potential enhancements for broader adoption, as well as fundamental paradigm shifts that may be necessary.</p>
 
 <p>The virtual and augmented reality (AR/VR) industry has plummeted from investors’ radar due to lackluster sales figures of Meta and with highly anticipated startups like Magic Leap failing to meet expectations by a significant margin. Top tech personalities like Elon Musk have also said that “I don’t see someone strapping a friggin’ screen to their face all day”. John Carmack who was in charge of building the metaverse left Meta saying that the pace of innovation is slow.</p>
 
@@ -74,74 +74,7 @@
 
 <p>Obviously, there won’t be just one company with this powerful AI, and seeing the pace of development it is very much possible that developers would be able to create their own AI for niche use cases. The good strategy therefore could be to aggregate these niche AIs on a single platform. This marketplace won’t be competing with the likes of OpenAI, Meta, or Google. Quora released it’s own platform <a href="https://techcrunch.com/2023/02/06/quora-opens-its-new-ai-chatbot-app-poe-to-the-general-public/">Poe</a> a couple of months back and recently <a href="https://www.fixie.ai/">Fixie</a>, a startup in the similar direction picked up $17 million in funding</p>
 
-<p>Who wins the AI wars is yet to be seen. It could very easily be the case that going above the current reasoning capacity of GPT-4 is not even possible with neural nets or that the entire internet’s data is not enough to train the next big AI. I will be following this space and will be sharing some small projects that I am building along the way.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[AI research is going so fast that even the adult industry is having a tough time catching up. Every day there’s a brand new paper on different AI architecture and yesterday I saw a paper by HuggingFace for a model that can communicate with all the different models present on the platform and with time will learn what model to use with what query. It’s moving fast enough to convince many top tech people that we will reach AGI in the next 5 years! that’s wild. Although I feel we might still have a decade or so before we reach there, but we can definitely get pretty close in the next couple of years.]]></summary></entry><entry><title type="html">Draft - System Design of my social media app</title><link href="http://localhost:4000/jekyll/update/2023/04/01/draft-copy-2.html" rel="alternate" type="text/html" title="Draft - System Design of my social media app" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/draft%20copy%202</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/draft-copy-2.html"><![CDATA[<p>Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/unfiltr_2.webp" alt="App Screenshot" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Let’s start with the tech challenges that we needed to solve.</p>
-<ul>
-  <li>Feed should load as quickly as possible</li>
-  <li>Reactions and comments should also be visible with minimal delay</li>
-  <li>Feed should be customized per user (just basic personalization for now)</li>
-</ul>
-
-<p>Remember, this was just an MVP and we only had about a month and a half to roll everything out, so some of the solutions might seem a little hackish but it worked for us. Since this was a read-heavy system we cached most of the stuff. All the posts were updated in follower feeds and directly served from the cache after a couple of joins.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/tweet_normal_user.png" alt="Tweet update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>One drawback with this approach is that if a user has a large number of followers this update can be slow. Therefore to tackle that, what we did was to update the celebrity posts at the time of fetching the user feed. We checked what celebrities the user is following and then added their most recent post in the user feed. In larger systems, there might be a completely separate logic for handling which post should be added (maybe it’s the most interesting to the user or with the most number of likes or a mix of the two).</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/celebrity_user.png" alt="Tweet update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>For storing reactions and comments we used the same formula. We cached most of the stuff. Whenever an update was made we updated both the SQL and the cache. Normally when the system scales, these SQL updates will need to be batched or else it will overtax the DB. We followed a simple schema for storing these.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/reaction_cache_schema.png" alt="Cache Schema" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Now for customizing the main user feed we kept it simple. Ideally, different ML pipelines work over the interaction data of the user along with other parameters to achieve this. But we just gave a score to different interaction events like tap, share, comment, and like and generated a rank based on the weighted score (just making an MVP here). The interaction data was put in a Kinesis stream and then in intervals of 30 minutes, the data was batched and written into S3 files. Our backend would pick this data at regular intervals and update the post scores.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/kinesis_data.png" alt="Kinesis update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Apart from this, there were other optimizations like batching the notifications when it exceeds a particular threshold, converting profile images to lower resolution for loading thumbnails, making a Jenkins task trigger at a random time, etc. Though I enjoyed working on the project, we couldn’t make it grow. Social media is one of my favorite fields to work in and I hope I get a chance to make something worthwhile in the future.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP.]]></summary></entry><entry><title type="html">Draft - Tumblr’s decline</title><link href="http://localhost:4000/jekyll/update/2023/04/01/draft-copy.html" rel="alternate" type="text/html" title="Draft - Tumblr’s decline" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/draft%20copy</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/draft-copy.html"><![CDATA[<ol>
-  <li>
-    <p>the current state of metaverse
- i. My experience
- ii. Plans of the big players
- iii. Startups in stealth</p>
-  </li>
-  <li>
-    <p>what’s missing
- i. John carmack leaving meta
- ii. Time saying they were wrong
- iii. Low graphic video game</p>
-  </li>
-  <li>
-    <p>how to improve
- i. gaming is the first step
- ii. strong social media (zero cost) -&gt; paid weak social media
- iii. things that replace reality quite well (movies, tv series, growth)
- iv. path to growth (provide utility -&gt; form networks/ community -&gt; engage)</p>
-  </li>
-</ol>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[the current state of metaverse i. My experience ii. Plans of the big players iii. Startups in stealth]]></summary></entry><entry><title type="html">Attention is all you need</title><link href="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html"><![CDATA[<p>With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one),
+<p>Who wins the AI wars is yet to be seen. It could very easily be the case that going above the current reasoning capacity of GPT-4 is not even possible with neural nets or that the entire internet’s data is not enough to train the next big AI. I will be following this space and will be sharing some small projects that I am building along the way.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[AI research is going so fast that even the adult industry is having a tough time catching up. Every day there’s a brand new paper on different AI architecture and yesterday I saw a paper by HuggingFace for a model that can communicate with all the different models present on the platform and with time will learn what model to use with what query. It’s moving fast enough to convince many top tech people that we will reach AGI in the next 5 years! that’s wild. Although I feel we might still have a decade or so before we reach there, but we can definitely get pretty close in the next couple of years.]]></summary></entry><entry><title type="html">Attention is all you need</title><link href="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html" rel="alternate" type="text/html" title="Attention is all you need" /><published>2023-04-01T20:44:32+05:30</published><updated>2023-04-01T20:44:32+05:30</updated><id>http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need</id><content type="html" xml:base="http://localhost:4000/jekyll/update/2023/04/01/attention-is-all-you-need.html"><![CDATA[<p>With tech tutorials flooding the streaming platforms and every next person you meet being a software developer (or planning to become one),
 technology is getting commoditized. At least the ones over which the current multi-billion dollar platforms are built upon. We find ourselves in a
 sea of open-source projects, all built with the same building blocks in some sense. It didn’t take LLMs long to figure out the patterns
 and start coding in a near-human level capacity. The future may still be a little further when anyone who wants to code, can code. But we are
