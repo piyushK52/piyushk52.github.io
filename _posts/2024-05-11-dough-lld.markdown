@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "Dough: Low level design"
+date:   2024-05-11 20:44:32 +0530
+categories: jekyll update
+---
+
+<br>
+<div style="text-align: center;">
+  <img src="https://private-user-images.githubusercontent.com/34690994/327800365-698d63f5-765c-4cf2-94f4-7943d241a6ea.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTU0NTEwMjIsIm5iZiI6MTcxNTQ1MDcyMiwicGF0aCI6Ii8zNDY5MDk5NC8zMjc4MDAzNjUtNjk4ZDYzZjUtNzY1Yy00Y2YyLTk0ZjQtNzk0M2QyNDFhNmVhLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA1MTElMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNTExVDE4MDUyMlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTUxYTc1Y2NjZDJjZmI1NTcyZTUyZmY2NWE3NTU1MmJiZTY0YzZkOGVmYjEzMWMzMjdhZGQ2YWQ5M2M4OGU0OTQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.4KZNUyUEuq9l6eJfKYfEOW2s3m9lZvmwt7GAcR6N1wk" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+The AI art tool that I have been working for quite a while now is finally released in beta! You can try it here - <a href="https://github.com/banodoco/Dough">Dough Beta</a> . Pom provided a lot of inputs and tirelessly worked with the tool to refine the layout/functioning. I was handling most of the technical aspects and in this post I will share a low level design of Dough.
+
+Firstly, from the inception I tried to keep Dough as modular as possible. Different components and integrations can be swapped easily and developed independently. At the center of the app is the core Streamlit UI and related utility functions. These interact with the data layer, that is essentially the backend, that can be easily plugged into multiple backends. In fact we had different backends for the local and hosted version (obviously!). Different backends can have their own databases and logic for maintaining users and payments.
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_1.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+As Streamlit refreshes the entire app (every single line!) anytime a state change occurs it becomes super hard to integrate APIs with it as we can't have the app calling 30 different APIs on a single dropdown click. A simple solution for this was to cache as much as possible. I created a simple cache decorator that was placed on top of the DataRepo (entrypoint to the data layer). This way it could cache any backend connected to it, local or hosted. Below you can see a simple function inside the decorator, which first checks the cache and if the data is not found then it hits the API.
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_2.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+<div style="text-align: center;">
+  <img src="/asset/images/dough_3.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+Now having just used the A1111 there was an obvious issue, people wanted to host it but it wasn't built for a new backend integration, the UI layer was tighly coupled with the ML layer and thus many startups trying to deploy it were deploying it in a completely new container everytime. This meant a lot of GPU time was wasted where people were just playing with the UI. Also everything was synchronous, which means that the UI will be blocked until the generation completes. We planned on making the operations asynchronous, which means the user is free to interact with the UI while the generation runs in the background. To solve both of these issues I made a modular ML layer and a background runner that schedules the tasks and updates the generation status. Having this modularity means anyone can plug in their own ML processor, we used to have third-party APIs but were able to quickly add ComfyUI support for local generations because of this modularity.
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_4.png" alt="Notification History" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+There are still a lot of improvements to be done and features to be added. The technical side is just one aspect of the app, Pom's push for perfection and insights in UX/functionality has been monumental in it's development. We plan on making a much slicker and fluid version in a JS framework very soon! 
