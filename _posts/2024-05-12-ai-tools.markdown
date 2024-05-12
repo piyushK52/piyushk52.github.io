@@ -1,0 +1,73 @@
+---
+layout: post
+title:  "The Next Evolution of Generative AI Tools"
+date:   2024-05-11 20:44:32 +0530
+categories: jekyll update
+---
+
+This post explores the different tools in the generative AI landscape and what's next.
+
+<div style="text-align: center;">
+  <img src="/asset/images/tool_banner.webp" alt="AI Tools" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+Release of the Stable Diffusion 1.5 kicked off a frenzy even among non-ai people as being able to generate images in a single click seemed just like magic. There were a couple of python scripts initially but the need for a proper tool led to SD webui/a1111 (made by a1111). 
+
+<br>
+<h2 class="post-list-heading">Automatic1111</h2>
+
+A1111 was the first tool that got mass adoption in the AI community, in fact in the SD subreddit it was the only tool being used/discussed for a couple of months. Since there was a strong community effort behind it, a lot of extensions were developed for it and there were a lot PRs being made to improve features. People were experimenting with different things and sometimes the things that worked seemed counterintuitive to even the ML folks. I remember many people were asking for the "clip skip" feature as it is very useful for anime related model (models based on NAI) but in some Github discussions the maintainers were like "huh? why do you wanna skip clip layers, it makes no sense". It is one of those things where we really need the entire community effort for it to work. Obviously now, it makes more sense and it is like a standard option in almost every tool. People were adding all kinds of extensions as well, like Ebsynth which would have been very tedious to setup if someone was using just Python scripts.
+
+<div style="text-align: center;">
+  <img src="/asset/images/a1111.png" alt="A1111" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+A1111 is still used widely but it is in a slow decline and the main reason for it is that it was unable to capture the entire generative AI ecosystem. It was very good for tinkerers, those who want to add small features/extensions and decent for artists as they can experiment with a lot of settings but not really great for developers as there was a lot of inflexible code and the app is not built in modular way where different components can be added and removed to create a new "workflow", like first do txt2img then img2vid then upscale.. all this was manual.
+
+<div style="text-align: center;">
+  <img src="/asset/images/a1111_venn.png" alt="A1111" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+
+<br>
+<h2 class="post-list-heading">ComfyUI</h2>
+
+ComfyUI was a major step up from A1111, not only did it have a much slicker js interface it improved on a lot of issues that plagued A1111. It allowed for creation of proper workflows and it was much more developer friendly compared to A1111 which meant a LOT of custom nodes were (and still are) being built daily. Creating a workflow and being able to share it is an insanely powerful feature in itself that accelerated it's adoption. You will find many people (including myself) opening tickets inside new ML repos asking for them to port it to ComfyUI. In a sense, it managed to capture both the tinkerers and developers completely, but there is still a large part of the artist community that needs to be pulled into the AI art revolution. One other drawback of Comfy is that since it is managed in a very decentralised way, breaking of flows is common. For e.g. a couple of days ago the Derfuu Integer node was removed from the Comfy Manager (that is managed by some other individual) and it broke a lot of workflows instantly. Also, there are a lot of nodes that are basically direct wrappers on top of the diffusers code that adds to the inefficiencies and there are no stable releases (as everyone is making their own release).
+
+<div style="text-align: center;">
+  <img src="/asset/images/comfyui_ss.png" alt="ComfyUI" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+<div style="text-align: center;">
+  <img src="/asset/images/comfy_venn.png" alt="ComfyUI" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+Many companies and startups have started cloning the node based structure of ComfyUI and making incremental adjustments to it. Also there are other tools similar to Comfy but with a very robust codebase, like InvokeAI. I think because of how InvokeAI is re-imagining the node based tools, it can be very powerful and may become the dominant player. As it also provides a minimal interface for artists who are not very familiar with the node based structure.
+
+Dough was an attempt by us (Banodoco) to provide a set steps for video generation. Images > Customize Images > Arrange in shots > Generate video. Although it is very good for video generation use cases, it fails in roping in the devs and tinkerers, also having limited options for generation limits artist (although that will be fixed soon!). Leaving out even one group has a big impact on the adoption, but it is something that we will fix in it's next iteration.
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_venn.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>
+
+<br>
+<h2 class="post-list-heading">What's Next?</h2>
+
+I believe the companies banking on ComfyUI ecosystem will have a tough time in the near future because it's adoption will slowly decrease. Just like A1111 hosting services are far and in-between, ComfyUI workflow hostings will vanish. The next iteration of tools (or tool) will have the following characteristic
+1. It will be open source and community-driven but still a focused effort and would have some kind of community-driven gatekeeping for what to let in (in terms of PRs/functionalities)
+2. Stable code releases including all the bells and whistles
+3. A UI that allows creating processes on top of the workflows
+4. It is cohesive and feels like a native app, if people want they go into the noodle-graph land or directly into the code but overall the app provides multiple levels of abstraction
+
+What this tool will look like? I don't know but hopefully we will have something very close to it pretty soon! 
+
+<div style="text-align: center;">
+  <img src="/asset/images/next_gen_venn.png" alt="Next gen tool" style="max-height: 600px; max-width: 100%; margin: 0 auto;">
+</div>
+<br>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+    <title>About | Learning Repository</title>
+    <meta name="generator" content="Jekyll v4.3.2" />
+    <meta property="og:title" content="About" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      name="description"
+      content="Personal thoughts on what I see around."
+    />
+    <meta
+      property="og:description"
+      content="Personal thoughts on what I see around."
+    />
+    <link rel="canonical" href="http://localhost:4000/about/" />
+    <meta property="og:url" content="http://localhost:4000/about/" />
+    <meta property="og:site_name" content="Learning Repository" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="twitter:title" content="About" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "description": "Personal thoughts on what I see around.",
+        "headline": "About",
+        "name": "Learning Repository",
+        "url": "http://localhost:4000/about/"
+      }
+    </script>
+    <!-- End Jekyll SEO tag -->
+    <link rel="stylesheet" href="/assets/main.css" />
+    <link
+      type="application/atom+xml"
+      rel="alternate"
+      href="http://localhost:4000/feed.xml"
+      title="Learning Repository"
+    />
+    <!-- Hotjar Tracking Code for Personal website -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:3461217,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+  </head><body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">The Next Evolution of Generative AI Tools</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-05-11T20:44:32+05:30" itemprop="datePublished">May 11, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This post explores the different tools in the generative AI landscape and what’s next.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/tool_banner.webp" alt="AI Tools" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>Release of the Stable Diffusion 1.5 kicked off a frenzy even among non-ai people as being able to generate images in a single click seemed just like magic. There were a couple of python scripts initially but the need for a proper tool led to SD webui/a1111 (made by a1111).</p>
+
+<p><br /></p>
+<h2 class="post-list-heading">Automatic1111</h2>
+
+<p>A1111 was the first tool that got mass adoption in the AI community, in fact in the SD subreddit it was the only tool being used/discussed for a couple of months. Since there was a strong community effort behind it, a lot of extensions were developed for it and there were a lot PRs being made to improve features. People were experimenting with different things and sometimes the things that worked seemed counterintuitive to even the ML folks. I remember many people were asking for the “clip skip” feature as it is very useful for anime related model (models based on NAI) but in some Github discussions the maintainers were like “huh? why do you wanna skip clip layers, it makes no sense”. It is one of those things where we really need the entire community effort for it to work. Obviously now, it makes more sense and it is like a standard option in almost every tool. People were adding all kinds of extensions as well, like Ebsynth which would have been very tedious to setup if someone was using just Python scripts.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/a1111.png" alt="A1111" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>A1111 is still used widely but it is in a slow decline and the main reason for it is that it was unable to capture the entire generative AI ecosystem. It was very good for tinkerers, those who want to add small features/extensions and decent for artists as they can experiment with a lot of settings but not really great for developers as there was a lot of inflexible code and the app is not built in modular way where different components can be added and removed to create a new “workflow”, like first do txt2img then img2vid then upscale.. all this was manual.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/a1111_venn.png" alt="A1111" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p><br /></p>
+<h2 class="post-list-heading">ComfyUI</h2>
+
+<p>ComfyUI was a major step up from A1111, not only did it have a much slicker js interface it improved on a lot of issues that plagued A1111. It allowed for creation of proper workflows and it was much more developer friendly compared to A1111 which meant a LOT of custom nodes were (and still are) being built daily. Creating a workflow and being able to share it is an insanely powerful feature in itself that accelerated it’s adoption. You will find many people (including myself) opening tickets inside new ML repos asking for them to port it to ComfyUI. In a sense, it managed to capture both the tinkerers and developers completely, but there is still a large part of the artist community that needs to be pulled into the AI art revolution. One other drawback of Comfy is that since it is managed in a very decentralised way, breaking of flows is common. For e.g. a couple of days ago the Derfuu Integer node was removed from the Comfy Manager (that is managed by some other individual) and it broke a lot of workflows instantly. Also, there are a lot of nodes that are basically direct wrappers on top of the diffusers code that adds to the inefficiencies and there are no stable releases (as everyone is making their own release).</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/comfyui_ss.png" alt="ComfyUI" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/comfy_venn.png" alt="ComfyUI" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>Many companies and startups have started cloning the node based structure of ComfyUI and making incremental adjustments to it. Also there are other tools similar to Comfy but with a very robust codebase, like InvokeAI. I think because of how InvokeAI is re-imagining the node based tools, it can be very powerful and may become the dominant player. As it also provides a minimal interface for artists who are not very familiar with the node based structure.</p>
+
+<p>Dough was an attempt by us (Banodoco) to provide a set steps for video generation. Images &gt; Customize Images &gt; Arrange in shots &gt; Generate video. Although it is very good for video generation use cases, it fails in roping in the devs and tinkerers, also having limited options for generation limits artist (although that will be fixed soon!). Leaving out even one group has a big impact on the adoption, but it is something that we will fix in it’s next iteration.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_venn.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p><br /></p>
+<h2 class="post-list-heading">What's Next?</h2>
+
+<p>I believe the companies banking on ComfyUI ecosystem will have a tough time in the near future because it’s adoption will slowly decrease. Just like A1111 hosting services are far and in-between, ComfyUI workflow hostings will vanish. The next iteration of tools (or tool) will have the following characteristic</p>
+<ol>
+  <li>It will be open source and community-driven but still a focused effort and would have some kind of community-driven gatekeeping for what to let in (in terms of PRs/functionalities)</li>
+  <li>Stable code releases including all the bells and whistles</li>
+  <li>A UI that allows creating processes on top of the workflows</li>
+  <li>It is cohesive and feels like a native app, if people want they go into the noodle-graph land or directly into the code but overall the app provides multiple levels of abstraction</li>
+</ol>
+
+<p>What this tool will look like? I don’t know but hopefully we will have something very close to it pretty soon!</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/next_gen_venn.png" alt="Next gen tool" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+  </div><a class="u-url" href="/jekyll/update/2024/05/11/ai-tools.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Learning Repository</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Learning Repository</li><li><a class="u-email" href="mailto:piyush.kumar.iaf@gmail.com">piyush.kumar.iaf@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/piyushK52"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">piyushK52</span></a></li><li><a href="https://www.twitter.com/thisispiyushK"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">thisispiyushK</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Personal thoughts on what I see around. </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
