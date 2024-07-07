@@ -1,37 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://piyushk.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://piyushk.github.io/" rel="alternate" type="text/html" /><updated>2024-05-12T14:04:52+05:30</updated><id>https://piyushk.github.io/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Dough: Low level design</title><link href="https://piyushk.github.io/jekyll/update/2024/05/11/dough-lld.html" rel="alternate" type="text/html" title="Dough: Low level design" /><published>2024-05-11T20:44:32+05:30</published><updated>2024-05-11T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/05/11/dough-lld</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/05/11/dough-lld.html"><![CDATA[<p><br /></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://piyushk.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://piyushk.github.io/" rel="alternate" type="text/html" /><updated>2024-07-07T12:09:51+05:30</updated><id>https://piyushk.github.io/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Designing a good enough Discord bot</title><link href="https://piyushk.github.io/jekyll/update/2024/07/06/discord-bot.html" rel="alternate" type="text/html" title="Designing a good enough Discord bot" /><published>2024-07-06T20:44:32+05:30</published><updated>2024-07-06T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/07/06/discord-bot</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/07/06/discord-bot.html"><![CDATA[<p>Recently, I worked on a Discord bot that people can use to generate AI images and videos. Here, I will share a quick overview of its system design.</p>
+
 <div style="text-align: center;">
-  <img src="/asset/images/dough_0.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <img src="/asset/images/discord_bot.png" alt="Discord bot" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
 </div>
 <p><br /></p>
 
-<p>The AI art tool that I have been working for quite a while now is finally released in beta! You can try it here - <a href="https://github.com/banodoco/Dough">Dough Beta</a> . Pom provided a lot of inputs and tirelessly worked with the tool to refine the layout/functioning. I was handling most of the technical aspects and in this post I will share a low level design of Dough.</p>
+<p>The Discord client and most of the FastAPI processes are quite fast, involving only some database operations. The GPU load has been offloaded to third-party APIs, and the results are received through webhooks. However, I noticed some slowdown when multiple users started using the bot simultaneously. Upon further investigation, I realized that only a couple of methods were the bottlenecks in the process, such as image_transform (which downloads ~20 images, resizes them, crops them, and finally uploads them). I shifted all these CPU-intensive methods to Lambda functions. This greatly improved the speed and decreased the load on the VM. Now that both CPU and GPU-intensive processes are highly scalable, the bot can easily handle thousands of users.</p>
 
-<p>Firstly, from the inception I tried to keep Dough as modular as possible. Different components and integrations can be swapped easily and developed independently. At the center of the app is the core Streamlit UI and related utility functions. These interact with the data layer, that is essentially the backend, that can be easily plugged into multiple backends. In fact we had different backends for the local and hosted version (obviously!). Different backends can have their own databases and logic for maintaining users and payments.</p>
+<p>The bot structure was also made modular, using cogs for individual commands. Since Discord client threads have a connection timeout, most of the client calls returned immediately from the backend, and the tasks were added in the background. Sample code is shown below.</p>
 
 <div style="text-align: center;">
-  <img src="/asset/images/dough_1.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <img src="/asset/images/bot_fastapi_code.png" alt="Sample code" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
 </div>
 <p><br /></p>
 
-<p>As Streamlit refreshes the entire app (every single line!) anytime a state change occurs it becomes super hard to integrate APIs with it as we can’t have the app calling 30 different APIs on a single dropdown click. A simple solution for this was to cache as much as possible. I created a simple cache decorator that was placed on top of the DataRepo (entrypoint to the data layer). This way it could cache any backend connected to it, local or hosted. Below you can see a simple function inside the decorator, which first checks the cache and if the data is not found then it hits the API.</p>
+<p>To scale this to millions of users, one would need to shard the client instance across multiple VMs, preferably in an ECS cluster. Similarly, the backend would need to be deployed in an ECS cluster.</p>
+
+<p>As the bot created and stored numerous images and videos, we implemented a simple cron job to schedule S3 bucket cleanup. Whenever a file was created, we injected expiry_time metadata into it, which the cleanup job used to determine whether to delete the file or not.</p>
 
 <div style="text-align: center;">
-  <img src="/asset/images/dough_2.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <img src="/asset/images/lambda_cleanup.png" alt="Cleanup" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
 </div>
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/dough_3.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Now having just used the A1111 there was an obvious issue, people wanted to host it but it wasn’t built for a new backend integration, the UI layer was tighly coupled with the ML layer and thus many startups trying to deploy it were deploying it in a completely new container everytime. This meant a lot of GPU time was wasted where people were just playing with the UI. Also everything was synchronous, which means that the UI will be blocked until the generation completes. We planned on making the operations asynchronous, which means the user is free to interact with the UI while the generation runs in the background. To solve both of these issues I made a modular ML layer and a background runner that schedules the tasks and updates the generation status. Having this modularity means anyone can plug in their own ML processor, we used to have third-party APIs but were able to quickly add ComfyUI support for local generations because of this modularity.</p>
-
-<div style="text-align: center;">
-  <img src="/asset/images/dough_4.png" alt="Notification History" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>There are still a lot of improvements to be done and features to be added. The technical side is just one aspect of the app, Pom’s push for perfection and insights in UX/functionality has been monumental in it’s development. We plan on making a much slicker and fluid version in a JS framework very soon!</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Next Evolution of Generative AI Tools</title><link href="https://piyushk.github.io/jekyll/update/2024/05/11/ai-tools.html" rel="alternate" type="text/html" title="The Next Evolution of Generative AI Tools" /><published>2024-05-11T20:44:32+05:30</published><updated>2024-05-11T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/05/11/ai-tools</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/05/11/ai-tools.html"><![CDATA[<p>This post explores the different tools in the generative AI landscape and what’s next.</p>
+<p><br /></p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[Recently, I worked on a Discord bot that people can use to generate AI images and videos. Here, I will share a quick overview of its system design.]]></summary></entry><entry><title type="html">The Next Evolution of Generative AI Tools</title><link href="https://piyushk.github.io/jekyll/update/2024/05/11/ai-tools.html" rel="alternate" type="text/html" title="The Next Evolution of Generative AI Tools" /><published>2024-05-11T20:44:32+05:30</published><updated>2024-05-11T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/05/11/ai-tools</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/05/11/ai-tools.html"><![CDATA[<p>This post explores the different tools in the generative AI landscape and what’s next.</p>
 
 <div style="text-align: center;">
   <img src="/asset/images/tool_banner.webp" alt="AI Tools" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
@@ -97,7 +87,40 @@
 <div style="text-align: center;">
   <img src="/asset/images/next_gen_venn.png" alt="Next gen tool" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
 </div>
-<p><br /></p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[This post explores the different tools in the generative AI landscape and what’s next.]]></summary></entry><entry><title type="html">Artifact: social with news &amp;gt; news with social</title><link href="https://piyushk.github.io/jekyll/update/2024/01/13/Artifact.html" rel="alternate" type="text/html" title="Artifact: social with news &amp;gt; news with social" /><published>2024-01-13T20:44:32+05:30</published><updated>2024-01-13T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/01/13/Artifact</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/01/13/Artifact.html"><![CDATA[<p><br /></p>
+<p><br /></p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[This post explores the different tools in the generative AI landscape and what’s next.]]></summary></entry><entry><title type="html">Dough: Low level design</title><link href="https://piyushk.github.io/jekyll/update/2024/05/11/dough-lld.html" rel="alternate" type="text/html" title="Dough: Low level design" /><published>2024-05-11T20:44:32+05:30</published><updated>2024-05-11T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/05/11/dough-lld</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/05/11/dough-lld.html"><![CDATA[<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/dough_0.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>The AI art tool that I have been working for quite a while now is finally released in beta! You can try it here - <a href="https://github.com/banodoco/Dough">Dough Beta</a> . Pom provided a lot of inputs and tirelessly worked with the tool to refine the layout/functioning. I was handling most of the technical aspects and in this post I will share a low level design of Dough.</p>
+
+<p>Firstly, from the inception I tried to keep Dough as modular as possible. Different components and integrations can be swapped easily and developed independently. At the center of the app is the core Streamlit UI and related utility functions. These interact with the data layer, that is essentially the backend, that can be easily plugged into multiple backends. In fact we had different backends for the local and hosted version (obviously!). Different backends can have their own databases and logic for maintaining users and payments.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_1.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>As Streamlit refreshes the entire app (every single line!) anytime a state change occurs it becomes super hard to integrate APIs with it as we can’t have the app calling 30 different APIs on a single dropdown click. A simple solution for this was to cache as much as possible. I created a simple cache decorator that was placed on top of the DataRepo (entrypoint to the data layer). This way it could cache any backend connected to it, local or hosted. Below you can see a simple function inside the decorator, which first checks the cache and if the data is not found then it hits the API.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_2.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/dough_3.png" alt="Dough" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>Now having just used the A1111 there was an obvious issue, people wanted to host it but it wasn’t built for a new backend integration, the UI layer was tighly coupled with the ML layer and thus many startups trying to deploy it were deploying it in a completely new container everytime. This meant a lot of GPU time was wasted where people were just playing with the UI. Also everything was synchronous, which means that the UI will be blocked until the generation completes. We planned on making the operations asynchronous, which means the user is free to interact with the UI while the generation runs in the background. To solve both of these issues I made a modular ML layer and a background runner that schedules the tasks and updates the generation status. Having this modularity means anyone can plug in their own ML processor, we used to have third-party APIs but were able to quickly add ComfyUI support for local generations because of this modularity.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/dough_4.png" alt="Notification History" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>There are still a lot of improvements to be done and features to be added. The technical side is just one aspect of the app, Pom’s push for perfection and insights in UX/functionality has been monumental in it’s development. We plan on making a much slicker and fluid version in a JS framework very soon!</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Artifact: social with news &amp;gt; news with social</title><link href="https://piyushk.github.io/jekyll/update/2024/01/13/Artifact.html" rel="alternate" type="text/html" title="Artifact: social with news &amp;gt; news with social" /><published>2024-01-13T20:44:32+05:30</published><updated>2024-01-13T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/01/13/Artifact</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/01/13/Artifact.html"><![CDATA[<p><br /></p>
 <div style="text-align: center;">
   <img src="/asset/images/artifact_closing.png" alt="Artifact Closing" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
 </div>

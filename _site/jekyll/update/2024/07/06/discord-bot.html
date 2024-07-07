@@ -51,17 +51,7 @@
             a.appendChild(r);
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
     </script>
-  </head><!-- Hotjar Tracking Code for Personal website -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:3461217,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script><body><header class="site-header" role="banner">
+  </head><body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
@@ -78,73 +68,44 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Designing a good enough Discord bot</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-07-06T20:44:32+05:30" itemprop="datePublished">Jul 6, 2024
+      </time></p>
+  </header>
 
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Recently, I worked on a Discord bot that people can use to generate AI images and videos. Here, I will share a quick overview of its system design.</p>
 
-  <ul class="post-list"><li>
-        <span class="post-meta">Jul 6, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/07/06/discord-bot.html">
-            Designing a good enough Discord bot
-          </a>
-        </h3></li><li>
-        <span class="post-meta">May 11, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/05/11/ai-tools.html">
-            The Next Evolution of Generative AI Tools
-          </a>
-        </h3></li><li>
-        <span class="post-meta">May 11, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/05/11/dough-lld.html">
-            Dough: Low level design
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jan 13, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/01/13/Artifact.html">
-            Artifact: social with news &gt; news with social
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Dec 30, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/12/30/streamlit-system-design.html">
-            Deploying a Streamlit app on production
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jul 19, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/07/19/generative_ai.html">
-            Generative AI: A semi-technical look
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 17, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/17/metaverse.html">
-            Thoughts on the metaverse
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 12, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/12/unfiltr_system_design.html">
-            System Design of my social media app
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 7, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/07/race-for-ai.html">
-            Race for an AI marketplace
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 1, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/01/attention-is-all-you-need.html">
-            Attention is all you need
-          </a>
-        </h3></li></ul>
+<div style="text-align: center;">
+  <img src="/asset/images/discord_bot.png" alt="Discord bot" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
 
-    </div>
+<p>The Discord client and most of the FastAPI processes are quite fast, involving only some database operations. The GPU load has been offloaded to third-party APIs, and the results are received through webhooks. However, I noticed some slowdown when multiple users started using the bot simultaneously. Upon further investigation, I realized that only a couple of methods were the bottlenecks in the process, such as image_transform (which downloads ~20 images, resizes them, crops them, and finally uploads them). I shifted all these CPU-intensive methods to Lambda functions. This greatly improved the speed and decreased the load on the VM. Now that both CPU and GPU-intensive processes are highly scalable, the bot can easily handle thousands of users.</p>
+
+<p>The bot structure was also made modular, using cogs for individual commands. Since Discord client threads have a connection timeout, most of the client calls returned immediately from the backend, and the tasks were added in the background. Sample code is shown below.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/bot_fastapi_code.png" alt="Sample code" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>To scale this to millions of users, one would need to shard the client instance across multiple VMs, preferably in an ECS cluster. Similarly, the backend would need to be deployed in an ECS cluster.</p>
+
+<p>As the bot created and stored numerous images and videos, we implemented a simple cron job to schedule S3 bucket cleanup. Whenever a file was created, we injected expiry_time metadata into it, which the cleanup job used to determine whether to delete the file or not.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/lambda_cleanup.png" alt="Cleanup" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+  </div><a class="u-url" href="/jekyll/update/2024/07/06/discord-bot.html" hidden></a>
+</article>
+
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
