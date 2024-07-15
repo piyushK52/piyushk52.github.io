@@ -51,17 +51,7 @@
             a.appendChild(r);
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
     </script>
-  </head><!-- Hotjar Tracking Code for Personal website -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:3461217,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script><body><header class="site-header" role="banner">
+  </head><body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
@@ -78,79 +68,49 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Database locked!</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-07-14T20:44:32+05:30" itemprop="datePublished">Jul 14, 2024
+      </time></p>
+  </header>
 
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I was using sqlite as a local lightweight database for a project and I ran into a weird error “Database is locked” (full trace <a href="/asset/images/database_locked.png" target="_blank">here
+</a>). Since I had mostly worked with Postgres and MySQL in my previous projects, this error turned out to be slightly more tricky than what I had thought.</p>
 
-  <ul class="post-list"><li>
-        <span class="post-meta">Jul 14, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/07/14/database-locked.html">
-            Database locked!
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jul 6, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/07/06/discord-bot.html">
-            Designing a good enough Discord bot
-          </a>
-        </h3></li><li>
-        <span class="post-meta">May 11, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/05/11/ai-tools.html">
-            The Next Evolution of Generative AI Tools
-          </a>
-        </h3></li><li>
-        <span class="post-meta">May 11, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/05/11/dough-lld.html">
-            Dough: Low level design
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jan 13, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/01/13/Artifact.html">
-            Artifact: social with news &gt; news with social
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Dec 30, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/12/30/streamlit-system-design.html">
-            Deploying a Streamlit app on production
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jul 19, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/07/19/generative_ai.html">
-            Generative AI: A semi-technical look
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 17, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/17/metaverse.html">
-            Thoughts on the metaverse
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 12, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/12/unfiltr_system_design.html">
-            System Design of my social media app
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 7, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/07/race-for-ai.html">
-            Race for an AI marketplace
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 1, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/01/attention-is-all-you-need.html">
-            Attention is all you need
-          </a>
-        </h3></li></ul>
+<p>Since I was already using atomic transactions at all the places it is required plus given the fact that sqlite by default works with serializable isolation level, I assumed that the only thing that could be going wrong would be the timeout. That is, some process is holding the database lock for significantly longer and other processes, unable to write to the db, are throwing this error.</p>
 
-    </div>
+<div style="text-align: center;">
+  <img src="/asset/images/sqlite_timeout.png" alt="Discord bot" style="max-height: 600px; max-width: 70%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>I updated the timeout for every new connection that was created to 30 seconds. I was positive that no transaction is even remotely reaching this duration, but I was still getting the same “database locked” errors randomly. Goggling stuff I came around this blog <a href="https://fractaledmind.github.io/2023/12/11/sqlite-on-rails-improving-concurrency/" target="_blank">Fractaled Mind</a>. It mentions a very important piece of data that I think is missing from many online forums (and also is not very clear in the documentation).</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/sqlite_lock.png" alt="Discord bot" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>The main issue is that the lock is not acquired when the transaction begins but when the write operation begins. This is very different from how other production databases work, and apart from other shortcomings of SQLite, this makes it a poor choice to be used in production.</p>
+<div style="text-align: center;">
+  <img src="/asset/images/transaction_lock.png" alt="Transaction Lock" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+<p>To fix this issue I made a simple context block that wrapped my atomic transactions, as shown below. The benefit of this approach is that you can independently make your transactions atomic/non-atomic.</p>
+
+<div style="text-align: center;">
+  <img src="/asset/images/sqlite_atomic_context.png" alt="Transaction Lock" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+</div>
+<p><br /></p>
+
+  </div><a class="u-url" href="/jekyll/update/2024/07/14/database-locked.html" hidden></a>
+</article>
+
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/"></data>
