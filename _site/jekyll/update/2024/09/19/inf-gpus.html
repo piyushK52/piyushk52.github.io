@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+    <title>About | Learning Repository</title>
+    <meta name="generator" content="Jekyll v4.3.2" />
+    <meta property="og:title" content="About" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      name="description"
+      content="Personal thoughts on what I see around."
+    />
+    <meta
+      property="og:description"
+      content="Personal thoughts on what I see around."
+    />
+    <link rel="canonical" href="http://localhost:4000/about/" />
+    <meta property="og:url" content="http://localhost:4000/about/" />
+    <meta property="og:site_name" content="Learning Repository" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="twitter:title" content="About" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "description": "Personal thoughts on what I see around.",
+        "headline": "About",
+        "name": "Learning Repository",
+        "url": "http://localhost:4000/about/"
+      }
+    </script>
+    <!-- End Jekyll SEO tag -->
+    <link rel="stylesheet" href="/assets/main.css" />
+    <link
+      type="application/atom+xml"
+      rel="alternate"
+      href="http://localhost:4000/feed.xml"
+      title="Learning Repository"
+    />
+    <!-- Hotjar Tracking Code for Personal website -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:3461217,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+  </head><body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Inference over distributed GPUs</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-09-19T20:44:32+05:30" itemprop="datePublished">Sep 19, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>In this post, I will cover a system I built recently to do inference over GPU clusters, specifically the Salad GPU service. To be clear, this post 
+is not about using multiple GPUs to perform a single inference but rather an event driven queuing system.</p>
+
+<p>The obvious challenge was that this GPU cluster runs on consumer hardware, people connect their GPUs to Salad and Salad runs the tasks on them. Though this sounds convenient, two drawbacks of this is that firstly the GPUs can go offline anytime (even mid-process) and secondly the internet speeds can vary significantly. First, for queuing and maintaining the inference states I used the CQRS pattern (Command and Query Responsibility Segregation) and the system defined as below</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/inf_backend_arch.png" alt="System architecture" style="max-height: 800px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>System architecture</figcaption>
+</div>
+<p><br /></p>
+
+<p>All the events go in the task mixer and at regular intervals, a homogenised mixture of tasks is pushed in the queue such that no user blocks the processing pipeline. This component also has the ability to set different priority for different users, thus prioritizing the tasks from a particular user over the others. This functionality was suggested by Peter.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/task_mixer.png" alt="Task Mixer" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+  <figcaption>Task Mixer, mixing user tasks with equal priority</figcaption>
+</div>
+<p><br /></p>
+
+<p>In our testing we didn’t find the gateway very robust so we flipped the process and made the containers pick the tasks directly from queue. All the outputs/errors are then pushed to the output queue which are picked by the consumer, stored in the db and then processed. For storing the results of each sampling process a modified version of AustinMroz’s checkpointing script was used, so that in the case of disconnection, the new generation will begin from where it left off. One major benefit of this system design is that the third party GPU provider can very easily be switched to something else (including having multiple providers of different kind as well). The containers also have a background download script that parallely downloads multiple files (in chunks) in the background (of files not present in the container) and has the ability to download stuff on priority as and when needed.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/gpu_container.png" alt="GPU container" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+  <figcaption>GPU container </figcaption>
+</div>
+<p><br /></p>
+
+<p>All the containers are connected to the scale server, that serves two purposes. Firstly, it scales the number of containers up or down depending upon the load. This scaling involves measuring task load, container capacity, hysteresis period and couple of other parameters. The other important function of this server is to keep a record of all the containers and their active tasks, incase of any disconnections the task is requeued. There is also a check that runs at regular intervals that takes care of many edge cases that could happen. Below is a graph of chaos testing of the system, with the breaks in the graph showing downtime of the scale server.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/chaos_testing.png" alt="Chaos testing" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+  <figcaption>Chaos testing with interrupting the scale server while dynamically changing the load</figcaption>
+</div>
+<p><br /></p>
+
+
+  </div><a class="u-url" href="/jekyll/update/2024/09/19/inf-gpus.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Learning Repository</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Learning Repository</li><li><a class="u-email" href="mailto:piyush.kumar.iaf@gmail.com">piyush.kumar.iaf@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/piyushK52"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">piyushK52</span></a></li><li><a href="https://www.twitter.com/thisispiyushK"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">thisispiyushK</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Personal thoughts on what I see around. </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

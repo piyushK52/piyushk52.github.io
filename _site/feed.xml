@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://piyushk.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://piyushk.github.io/" rel="alternate" type="text/html" /><updated>2024-08-12T03:05:34+05:30</updated><id>https://piyushk.github.io/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Social media in the age of AI</title><link href="https://piyushk.github.io/jekyll/update/2024/08/09/social-media-x-ai.html" rel="alternate" type="text/html" title="Social media in the age of AI" /><published>2024-08-09T20:44:32+05:30</published><updated>2024-08-09T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/08/09/social-media-x-ai</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/08/09/social-media-x-ai.html"><![CDATA[<p>In this post, I will explore how social media is evolving and what its next phase of evolution might be. I’ll focus on mainstream platforms, excluding message boards or local sites (like Niconico). I’m not an expert on this subject, just an avid reader of tech news, and I’m writing this as a quick analysis. Please consider this post in that context.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://piyushk.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://piyushk.github.io/" rel="alternate" type="text/html" /><updated>2024-09-20T23:13:22+05:30</updated><id>https://piyushk.github.io/feed.xml</id><title type="html">Learning Repository</title><subtitle>Personal thoughts on what I see around. </subtitle><entry><title type="html">Inference over distributed GPUs</title><link href="https://piyushk.github.io/jekyll/update/2024/09/19/inf-gpus.html" rel="alternate" type="text/html" title="Inference over distributed GPUs" /><published>2024-09-19T20:44:32+05:30</published><updated>2024-09-19T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/09/19/inf-gpus</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/09/19/inf-gpus.html"><![CDATA[<p>In this post, I will cover a system I built recently to do inference over GPU clusters, specifically the Salad GPU service. To be clear, this post 
+is not about using multiple GPUs to perform a single inference but rather an event driven queuing system.</p>
+
+<p>The obvious challenge was that this GPU cluster runs on consumer hardware, people connect their GPUs to Salad and Salad runs the tasks on them. Though this sounds convenient, two drawbacks of this is that firstly the GPUs can go offline anytime (even mid-process) and secondly the internet speeds can vary significantly. First, for queuing and maintaining the inference states I used the CQRS pattern (Command and Query Responsibility Segregation) and the system defined as below</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/inf_backend_arch.png" alt="System architecture" style="max-height: 800px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>System architecture</figcaption>
+</div>
+<p><br /></p>
+
+<p>All the events go in the task mixer and at regular intervals, a homogenised mixture of tasks is pushed in the queue such that no user blocks the processing pipeline. This component also has the ability to set different priority for different users, thus prioritizing the tasks from a particular user over the others. This functionality was suggested by Peter.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/task_mixer.png" alt="Task Mixer" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+  <figcaption>Task Mixer, mixing user tasks with equal priority</figcaption>
+</div>
+<p><br /></p>
+
+<p>In our testing we didn’t find the gateway very robust so we flipped the process and made the containers pick the tasks directly from queue. All the outputs/errors are then pushed to the output queue which are picked by the consumer, stored in the db and then processed. For storing the results of each sampling process a modified version of AustinMroz’s checkpointing script was used, so that in the case of disconnection, the new generation will begin from where it left off. One major benefit of this system design is that the third party GPU provider can very easily be switched to something else (including having multiple providers of different kind as well). The containers also have a background download script that parallely downloads multiple files (in chunks) in the background (of files not present in the container) and has the ability to download stuff on priority as and when needed.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/gpu_container.png" alt="GPU container" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+  <figcaption>GPU container </figcaption>
+</div>
+<p><br /></p>
+
+<p>All the containers are connected to the scale server, that serves two purposes. Firstly, it scales the number of containers up or down depending upon the load. This scaling involves measuring task load, container capacity, hysteresis period and couple of other parameters. The other important function of this server is to keep a record of all the containers and their active tasks, incase of any disconnections the task is requeued. There is also a check that runs at regular intervals that takes care of many edge cases that could happen. Below is a graph of chaos testing of the system, with the breaks in the graph showing downtime of the scale server.</p>
+
+<p><br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/chaos_testing.png" alt="Chaos testing" style="max-height: 600px; max-width: 90%; margin: 0 auto;" />
+  <figcaption>Chaos testing with interrupting the scale server while dynamically changing the load</figcaption>
+</div>
+<p><br /></p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[In this post, I will cover a system I built recently to do inference over GPU clusters, specifically the Salad GPU service. To be clear, this post is not about using multiple GPUs to perform a single inference but rather an event driven queuing system.]]></summary></entry><entry><title type="html">Social media in the age of AI</title><link href="https://piyushk.github.io/jekyll/update/2024/08/09/social-media-x-ai.html" rel="alternate" type="text/html" title="Social media in the age of AI" /><published>2024-08-09T20:44:32+05:30</published><updated>2024-08-09T20:44:32+05:30</updated><id>https://piyushk.github.io/jekyll/update/2024/08/09/social-media-x-ai</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2024/08/09/social-media-x-ai.html"><![CDATA[<p>In this post, I will explore how social media is evolving and what its next phase of evolution might be. I’ll focus on mainstream platforms, excluding message boards or local sites (like Niconico). I’m not an expert on this subject, just an avid reader of tech news, and I’m writing this as a quick analysis. Please consider this post in that context.</p>
 
 <h2 id="from-single-to-multi-modality">From Single to Multi-Modality</h2>
 
@@ -302,53 +339,4 @@
 
 <p>One other issue is that very few of your friends are in it. Even if they are, there are very few things to be done. We already have MMORPGs and similar games, where your network is present and the ‘immersive’ experience doesn’t make much difference. As stated in “The cold start problem”, the goal should be to first build an atomic network and then grow from there. I believe Meta had the right idea, of focusing on creating VR-first experiences. It can be a game but mostly has to be something different. Maybe it’s a field trip to an alien planet with your friends, maybe it’s an escape room, or a VR documentary. I believe BigScreenVR has found its core group of users (like me), who tune in every now and then. What’s their secret sauce? They let anyone host a private room and share any video. So you could in ‘theory’ have ‘some’ people screening the latest movies and you get to watch it from a perfect spot in a grand theatre without a kid crying in the back.</p>
 
-<p>User experience is the other thing that creates a lot of friction. First, you have to put on the clunky headsets in position then turn them on then wait for them to boot. If in between you have to go to the bathroom, you have to take the entire thing off (headsets, controllers, charging cables, headphones, and wires) and then put it back on when you come back. The headset should be small, super quick to boot (or maybe should plug in directly to your laptop), have a long battery life or charges through the laptop connection, and has just simple gloves for hand tracking (no turning on or battery required for those). I believe one other limitation is the technology, current graphics look like they are from the PS2 era. As Apple has been always great at striking the balance between tech and user experience, I believe they have the most chance of nailing this correctly. We will have to wait and see what Apple unveils in June.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[I have been using the Oculus Quest 2, on and off for about 1 year now. The first time I used it I was blown away. I thought to myself, this is definitely the future. Weirdly enough, when I discussed it with my friends and even the reviews online, no one particularly seems to enjoy it. “It’s a poorly designed gaming system” - this is the typical response that I got. Later in this post, I will delve into potential enhancements for broader adoption, as well as fundamental paradigm shifts that may be necessary.]]></summary></entry><entry><title type="html">System Design of my social media app</title><link href="https://piyushk.github.io/jekyll/update/2023/04/12/unfiltr_system_design.html" rel="alternate" type="text/html" title="System Design of my social media app" /><published>2023-04-12T22:55:00+05:30</published><updated>2023-04-12T22:55:00+05:30</updated><id>https://piyushk.github.io/jekyll/update/2023/04/12/unfiltr_system_design</id><content type="html" xml:base="https://piyushk.github.io/jekyll/update/2023/04/12/unfiltr_system_design.html"><![CDATA[<p>Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/unfiltr_2.webp" alt="App Screenshot" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Let’s start with the tech challenges that we needed to solve.</p>
-<ul>
-  <li>Feed should load as quickly as possible</li>
-  <li>Reactions and comments should also be visible with minimal delay</li>
-  <li>Feed should be customized per user (just basic personalization for now)</li>
-</ul>
-
-<p>Remember, this was just an MVP and we only had about a month and a half to roll everything out, so some of the solutions might seem a little hackish but it worked for us. Since this was a read-heavy system we cached most of the stuff. All the posts were updated in follower feeds and directly served from the cache after a couple of joins.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/tweet_normal_user.png" alt="Tweet update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>One drawback with this approach is that if a user has a large number of followers this update can be slow. Therefore to tackle that, what we did was to update the celebrity posts at the time of fetching the user feed. We checked what celebrities the user is following and then added their most recent post in the user feed. In larger systems, there might be a completely separate logic for handling which post should be added (maybe it’s the most interesting to the user or with the most number of likes or a mix of the two).</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/celebrity_user.png" alt="Tweet update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>For storing reactions and comments we used the same formula. We cached most of the stuff. Whenever an update was made we updated both the SQL and the cache. Normally when the system scales, these SQL updates will need to be batched or else it will overtax the DB. We followed a simple schema for storing these.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/reaction_cache_schema.png" alt="Cache Schema" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Now for customizing the main user feed we kept it simple. Ideally, different ML pipelines work over the interaction data of the user along with other parameters to achieve this. But we just gave a score to different interaction events like tap, share, comment, and like and generated a rank based on the weighted score (just making an MVP here). The interaction data was put in a Kinesis stream and then in intervals of 30 minutes, the data was batched and written into S3 files. Our backend would pick this data at regular intervals and update the post scores.</p>
-
-<p><br /></p>
-<div style="text-align: center;">
-  <img src="/asset/images/kinesis_data.png" alt="Kinesis update" style="height: 100%; max-width: 100%; margin: 0 auto;" />
-</div>
-<p><br /></p>
-
-<p>Apart from this, there were other optimizations like batching the notifications when it exceeds a particular threshold, converting profile images to lower resolution for loading thumbnails, making a Jenkins task trigger at a random time, etc. To keep things streamlined we used Terraform for managing the infra. This was my second time working this it and I was really impressed by how much efficient it was compared to manually tinkering with the GUI.</p>
-
-<p>Though I enjoyed working on the project, we couldn’t make it grow. Social media is one of my favorite fields to work in and I hope I get a chance to make something worthwhile in the future.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[Last year me and my friend started a startup. We started with a BNPL app but shortly after that the revised RBI guidelines came to effect and all our plans were thrown into disarray and we had to pivot to a different idea altogether. In a desperate attempt to catch the billion-dollar wave of BeReal, we pivoted to make a BeReal clone for the Indian market (I know this was one of the worst pivots a startup with our circumstances can take). As we started building the app I realized it was not as simple as it seems. Since I was leading the tech, I had to figure out a lot of the stuff. In this article, I will summarize the high-level system design that I followed to build our MVP.]]></summary></entry></feed>
+<p>User experience is the other thing that creates a lot of friction. First, you have to put on the clunky headsets in position then turn them on then wait for them to boot. If in between you have to go to the bathroom, you have to take the entire thing off (headsets, controllers, charging cables, headphones, and wires) and then put it back on when you come back. The headset should be small, super quick to boot (or maybe should plug in directly to your laptop), have a long battery life or charges through the laptop connection, and has just simple gloves for hand tracking (no turning on or battery required for those). I believe one other limitation is the technology, current graphics look like they are from the PS2 era. As Apple has been always great at striking the balance between tech and user experience, I believe they have the most chance of nailing this correctly. We will have to wait and see what Apple unveils in June.</p>]]></content><author><name></name></author><category term="jekyll" /><category term="update" /><summary type="html"><![CDATA[I have been using the Oculus Quest 2, on and off for about 1 year now. The first time I used it I was blown away. I thought to myself, this is definitely the future. Weirdly enough, when I discussed it with my friends and even the reviews online, no one particularly seems to enjoy it. “It’s a poorly designed gaming system” - this is the typical response that I got. Later in this post, I will delve into potential enhancements for broader adoption, as well as fundamental paradigm shifts that may be necessary.]]></summary></entry></feed>
