@@ -51,17 +51,7 @@
             a.appendChild(r);
         })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
     </script>
-  </head><!-- Hotjar Tracking Code for Personal website -->
-<script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:3461217,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script><body><header class="site-header" role="banner">
+  </head><body><header class="site-header" role="banner">
 
   <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
         <input type="checkbox" id="nav-trigger" class="nav-trigger" />
@@ -78,103 +68,71 @@
 </header>
 <main class="page-content" aria-label="Content">
       <div class="wrapper">
-        <div class="home">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Triton Fused Backward Layer Norm</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2025-09-25T20:44:32+05:30" itemprop="datePublished">Sep 25, 2025
+      </time></p>
+  </header>
 
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>This post will go over some of the overlooked details of fused backward layer norm implementation in triton. Here I will mostly go into the maths and visualization, for the complete code you can check the original Triton tutorial - <a href="https://triton-lang.org/main/getting-started/tutorials/05-layer-norm.html">Layer Normalization</a></p>
 
-  <ul class="post-list"><li>
-        <span class="post-meta">Sep 25, 2025</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2025/09/25/triton_bwd.html">
-            Triton Fused Backward Layer Norm
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Nov 15, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/11/15/handling-burst-scaling.html">
-            Handling burst scaling
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Sep 19, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/09/19/inf-gpus.html">
-            Inference over distributed GPUs
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Aug 9, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/08/09/social-media-x-ai.html">
-            Social media in the age of AI
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jul 14, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/07/14/database-locked.html">
-            Database locked!
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jul 6, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/07/06/discord-bot.html">
-            Designing a good enough Discord bot
-          </a>
-        </h3></li><li>
-        <span class="post-meta">May 11, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/05/11/ai-tools.html">
-            The Next Evolution of Generative AI Tools
-          </a>
-        </h3></li><li>
-        <span class="post-meta">May 11, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/05/11/dough-lld.html">
-            Dough: Low level design
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jan 13, 2024</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2024/01/13/Artifact.html">
-            Artifact: social with news &gt; news with social
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Dec 30, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/12/30/streamlit-system-design.html">
-            Deploying a Streamlit app on production
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Jul 19, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/07/19/generative_ai.html">
-            Generative AI: A semi-technical look
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 17, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/17/metaverse.html">
-            Thoughts on the metaverse
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 12, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/12/unfiltr_system_design.html">
-            System Design of my social media app
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 7, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/07/race-for-ai.html">
-            Race for an AI marketplace
-          </a>
-        </h3></li><li>
-        <span class="post-meta">Apr 1, 2023</span>
-        <h3>
-          <a class="post-link" href="/jekyll/update/2023/04/01/attention-is-all-you-need.html">
-            Attention is all you need
-          </a>
-        </h3></li></ul>
+<p>First thing to cover is the derivation of Vector Jacobian Product of x, given by the formula below:
+<br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/vjp_x.png" alt="VJP X" style="max-height: 400px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>Vector Jacobian Product of X</figcaption>
+</div>
+<p><br /></p>
 
-    </div>
+<p>Here are some basic differentials that we will ultimately plug into the final formula.
+<br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/vjp_derivation_1.png" alt="VJP X derivation" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>VJP differentials</figcaption>
+</div>
+<p><br /></p>
+
+<p>Plugging all the above differentials into the main formula below we get our VJP of x.
+<br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/vjp_derivation_2.png" alt="VJP X derivation" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>VJP formula</figcaption>
+</div>
+<p><br /></p>
+
+<p>We can also see the straightforward derivation of the VJPs of w and b above.
+<br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/vjp_wb.png" alt="VJP WB" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <!-- <figcaption>VJP WB</figcaption> -->
+</div>
+<p><br /></p>
+
+<p>Now, since these each input in a batch will affect the gradient calculation of W and B, we will need to sum up the calculated dw and db matrix along the batch dimension. For summing the inputs along the batch we parallelize the sum in small groups, this partial sum (parallelized) is finally reduced again to get the output.
+<br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/w_reduction.png" alt="Sum reduction" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>Sum reduction (with dummy values)</figcaption>
+</div>
+<p><br /></p>
+
+<p>The reduction from dW to dW_partial is simple where we assign one program to each row but for reducing dW_partial to dW_final we do it in groups of BLOCK_SIZE_M. This is mainly due to the fact that unlike stage 1 (dw -&gt; dw_partial) which was somewhat compute intensive with the calculation of dX as well in this stage we are purely doing reduction.
+<br /></p>
+<div style="text-align: center;">
+  <img src="/asset/images/dw_final_reduction.png" alt="Final reduction" style="max-height: 600px; max-width: 100%; margin: 0 auto;" />
+  <figcaption>Final reduction (Stage 2)</figcaption>
+</div>
+<p><br /></p>
+
+<p>BLOCK_SIZE_N is basically N in the tutorial code but it can be better found through auto-tuning. To adapt this code for diffusion transformers last three dimensions should be taken into consideration for normalization (B, C, H, W) -&gt; (B, C * H * W).</p>
+
+  </div><a class="u-url" href="/jekyll/update/2025/09/25/triton_bwd.html" hidden></a>
+</article>
+
       </div>
     </main><footer class="site-footer h-card">
   <data class="u-url" href="/"></data>

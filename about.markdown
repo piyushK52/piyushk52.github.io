@@ -4,8 +4,6 @@ title: About
 permalink: /about/
 ---
 
-Hi there! I am Piyush. I am an entrepreneur with a couple of scar marks, a developer with more than 5 yrs of experience (backend and infra) and a dreamer who is trying to live in the future. 
-I am always experimenting with new ideas or building something. Whatever I learn is just kept in a bookmark, notion page or google docs somewhere, only
-to be never revisited again. My aim with this website is to share my learnings and milestones with the world, and with my future self.
+Hi there! I am Piyush. Presently I am pursuing independent GenAI research and engineering projects (OSS). Previously I led tech at my fintech startup focusing on distributed systems and trad software dev. This space is where I collect sparks of ideas, lessons from experiments, and the occasional deep shower thoughts.
 
 Have any feedback, queries or just want to get in touch. Drop me an email, always happy to connect!
