@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+    <title>About | Learning Repository</title>
+    <meta name="generator" content="Jekyll v4.3.2" />
+    <meta property="og:title" content="About" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      name="description"
+      content="Personal thoughts on what I see around."
+    />
+    <meta
+      property="og:description"
+      content="Personal thoughts on what I see around."
+    />
+    <link rel="canonical" href="http://localhost:4000/about/" />
+    <meta property="og:url" content="http://localhost:4000/about/" />
+    <meta property="og:site_name" content="Learning Repository" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta property="twitter:title" content="About" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "description": "Personal thoughts on what I see around.",
+        "headline": "About",
+        "name": "Learning Repository",
+        "url": "http://localhost:4000/about/"
+      }
+    </script>
+    <!-- End Jekyll SEO tag -->
+    <link rel="stylesheet" href="/assets/main.css" />
+    <link
+      type="application/atom+xml"
+      rel="alternate"
+      href="http://localhost:4000/feed.xml"
+      title="Learning Repository"
+    />
+    <!-- Hotjar Tracking Code for Personal website -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:3461217,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+  </head><body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Learning Repository</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Deep Dive: Blackwell B200</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2026-07-08T20:44:32+05:30" itemprop="datePublished">Jul 8, 2026
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I’ve been going through blogs and papers regarding B200’s design and its tradeoffs. Here I will summarize what I’ve learned so far. B200 is NVIDIA’s datacenter Blackwell GPU: 148 SMs across two dies connected by NV-HBI, with 192 GB HBM3e at 8 TB/s and a 1000W TDP.</p>
+
+<p><img src="/asset/images/10_blackwell_arch.webp" alt="Blackwell Arch" /></p>
+
+<p>Quick comparison with the previous Hopper arch. B200 unifies the fp32 and int32 cores while introducing TMEM. It also introduces new 4bit Tensor Cores for int4/fp4.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Hopper (H100 SXM5)</th>
+      <th>Blackwell (B200)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SMs</td>
+      <td>132</td>
+      <td>148</td>
+    </tr>
+    <tr>
+      <td>GPCs</td>
+      <td>8</td>
+      <td>8 (4 per die)</td>
+    </tr>
+    <tr>
+      <td>FP32/INT32</td>
+      <td>128 FP32 + 64 INT32 (separate)</td>
+      <td>128 unified (FP32 or INT32 per cycle)</td>
+    </tr>
+    <tr>
+      <td>FP64</td>
+      <td>64 dedicated</td>
+      <td>~64 dedicated per SM</td>
+    </tr>
+    <tr>
+      <td>Tensor Cores</td>
+      <td>4 (4th-gen)</td>
+      <td>4 (5th-gen)</td>
+    </tr>
+    <tr>
+      <td>TMEM</td>
+      <td>—</td>
+      <td>256 KB</td>
+    </tr>
+    <tr>
+      <td>L1/SMEM per SM</td>
+      <td>256 KB unified</td>
+      <td>256 KB unified</td>
+    </tr>
+    <tr>
+      <td>L2 cache</td>
+      <td>50 MB</td>
+      <td>~126 MB</td>
+    </tr>
+    <tr>
+      <td>HBM</td>
+      <td>80 GB @ 3.35 TB/s</td>
+      <td>192 GB raw @ 8 TB/s</td>
+    </tr>
+    <tr>
+      <td>Native FP4/FP6</td>
+      <td>No (FP8 only)</td>
+      <td>Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Although Hopper has extra 64 int32 cores, they don’t raise its peak FFMA which remains around 128 FFMA/cycle/SM. This is the same for Blackwell as well.</p>
+
+<h2 id="register-pressure-and-the-tmem-migration">Register Pressure and the TMEM Migration</h2>
+
+<p>Over the years Tensor Core instructions gained more direct access to SMEM but Blackwell moved accumulators into a new mem, TMEM.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Architecture</th>
+      <th>Matrix A</th>
+      <th>Matrix B</th>
+      <th>Accumulator D</th>
+      <th>Key Instruction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Volta (2017)</td>
+      <td>Register</td>
+      <td>Register</td>
+      <td>Register</td>
+      <td><code class="language-plaintext highlighter-rouge">mma.sync</code></td>
+    </tr>
+    <tr>
+      <td>Ampere (2020)</td>
+      <td>Register</td>
+      <td>Register</td>
+      <td>Register</td>
+      <td><code class="language-plaintext highlighter-rouge">mma.sync</code></td>
+    </tr>
+    <tr>
+      <td>Hopper (2022)</td>
+      <td>SMEM / Register</td>
+      <td>SMEM</td>
+      <td>Register</td>
+      <td><code class="language-plaintext highlighter-rouge">wgmma.mma_async</code></td>
+    </tr>
+    <tr>
+      <td><strong>Blackwell (2024)</strong></td>
+      <td><strong>TMEM</strong> / SMEM</td>
+      <td><strong>SMEM</strong></td>
+      <td><strong>TMEM</strong></td>
+      <td><code class="language-plaintext highlighter-rouge">tcgen05.mma</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>TMEM (Tensor Memory)</strong> is a new on-SM scratchpad that’s private to the Tensor Cores. TMEM doesn’t support the typical load/store operations per thread. Typically, TMA moves data from global memory into shared memory, then <code class="language-plaintext highlighter-rouge">tcgen05.mma</code> reads operands from SMEM and writes the accumulator to TMEM. The only way to read it back into registers is <code class="language-plaintext highlighter-rouge">tcgen05.ld</code>.</p>
+
+<p><img src="/asset/images/09_tmem_blackwell.png" alt="TMEM" /></p>
+
+<p>Each Tensor Core generation made MMA progressively less intrusive on the scalar pipeline by reducing the sync cost. On Volta and Ampere mma.sync is required for all 32 warp threads to participate but its latency can be hidden with independent overlapping instructions. Hopper’s wgmma.mma_async uses a warpgroup (128 threads) instead of a single warp and makes it asynchronous so the warpgroup could issue an MMA and then proceed to other work while it ran in the background.</p>
+
+<p>Blackwell’s tcgen05.mma takes this to its logical endpoint. A single thread issues the MMA on behalf of the entire CTA. The other 127 threads never touch the MMA path, they’re free to issue TMA loads, manage barriers or compute addresses concurrently. This is “full decoupling”. The Tensor Cores are now independent coprocessors driven by one thread with its accumulator in TMEM and completely separate from the scalar register file.</p>
+
+<h3 id="register-pressure">Register Pressure</h3>
+
+<p>I compiled two CUTLASS tutorial GEMM kernels on the B200:</p>
+
+<ul>
+  <li><strong>Ampere path</strong> (<code class="language-plaintext highlighter-rouge">sgemm_sm80.cu</code>): uses <code class="language-plaintext highlighter-rouge">mma.sync</code> with a 128×64 tile, FP16 inputs and an FP16 accumulator held in registers. Compiled with <code class="language-plaintext highlighter-rouge">nvcc -arch=sm_100</code> (backward-compatible on B200).</li>
+  <li><strong>Blackwell path</strong> (<code class="language-plaintext highlighter-rouge">01_mma_sm100.cu</code>): uses <code class="language-plaintext highlighter-rouge">tcgen05.mma</code> with a 128×256 tile, FP16 inputs and an FP32 accumulator held in TMEM. Compiled with <code class="language-plaintext highlighter-rouge">nvcc -arch=sm_100a</code> (the <code class="language-plaintext highlighter-rouge">a</code> variant enables <code class="language-plaintext highlighter-rouge">tcgen05</code>/TMEM).</li>
+</ul>
+
+<p>Both were compiled with <code class="language-plaintext highlighter-rouge">-ptxas-options=-v</code> which makes the PTX assembler print register allocation for every function.</p>
+
+<p><img src="/asset/images/01_register_comparison.png" alt="Register Comparison" /></p>
+
+<p>I observed that the Blackwell kernel hits the 255 register ceiling and spills to local memory. The question is, if TMEM removes the accumulator from the register file then why does it need more registers and not fewer?</p>
+
+<p>Since NCU isn’t available on a RunPod cloud instance, I used kernel modification and SASS disassembly. I replaced the full epilogue with a minimal checksum epilogue that still consumed the TMEM accumulator. The resulting kernel used 61 registers with no spills while retaining the same eight static UTCHMMA instructions as the full kernel. I then disassembled the full kernel with cuobjdump –dump-sass and found 0 static LDL sites in the MMA mainloop and 547 in the epilogue. Together with the ptxas spill report, this shows that, in this kernel, peak register pressure and spilling arise when the TMEM accumulator is materialized into registers for the epilogue, rather than during the MMA mainloop.</p>
+
+<p>The point of TMEM isn’t fewer registers in total. It’s to keep the compute phase’s registers free so the MMA pipeline stays fed. The epilogue can tolerate spills because it can be chunked but the compute phase can’t.</p>
+
+<h2 id="sfu-throughput">SFU Throughput</h2>
+
+<p>B200 Tensor Cores are enormously fast with 2.25 PFLOPS in FP16 and 9 PFLOPS in FP4. But attention isn’t just matmul. After <code class="language-plaintext highlighter-rouge">QK^T</code> you run <code class="language-plaintext highlighter-rouge">softmax(QK^T / √d)</code> which calls <code class="language-plaintext highlighter-rouge">exp()</code> on every element. The exp() function uses the special-function pipeline, through native instructions such as MUFU.EX2.</p>
+
+<p>B200 can do 16 transcendental ops per SM per cycle while its Tensor Cores can do 8192 fp16 FLOPS. From Hopper to Blackwell, Tensor Core throughput increased substantially, but the documented transcendental throughput per SM remained unchanged. This widened the imbalance between matrix multiplication and operations such as exponentials.</p>
+
+<p>To test this, I swept 1–32 independent instruction chains per thread, 128–512 threads per block, and multiple blocks per SM. I used ILP because a simple loop must wait for each result before issuing the next one. The ILP 8, 16 and 32 variants all remain near 4.65 trillion results/s, showing that the native MUFU.EX2 pipeline has reached its throughput ceiling. The seven measurements for the winning configuration ranged from 4.64898 to 4.64997 trillion results/s.</p>
+
+<p><img src="/asset/images/sfu_ilp_occupancy.png" alt="SFU vs Tensor Core" /></p>
+
+<h2 id="cross-die-memory-latency">Cross-Die Memory Latency</h2>
+
+<h3 id="the-architecture">The Architecture</h3>
+
+<p>B200 is two GPU dies in one package. Each die has its own L2 cache slice (~63MB) and its own HBM3e stacks (96GB). The two dies are connected by NV-HBI at 10 TB/s. An SM on die A can access die B’s L2 and HBM, but the request must traverse the NV-HBI interconnect. CUDA 13 exposes no CTA memory affinity API meaning you can’t tell the runtime “schedule this thread block near this data”.</p>
+
+<h3 id="l2-the-cross-die-penalty-is-visible">L2: The Cross-Die Penalty is Visible</h3>
+
+<p><img src="/asset/images/11_l2_latency.png" alt="Latency vs Offset" /></p>
+
+<p>SemiAnalysis measured this directly. They ran an L2 sized pointer chase 126MB sized to fill L2. With all 148 SMs traversing the same shuffled chain and recording per load latency with <code class="language-plaintext highlighter-rouge">clock64()</code>. By comparing latency vectors between every SM pair they built a 148×148 distance matrix. Two clear clusters emerged which were separated by 300 cycles. SMs on the same die see similar L2 latency patterns while those on the different die see inverse patterns. Local L2 hit was 150 cycles and remote L2 hit (cross-die) was around 450 cycles. The 300 cycle NV-HBI crossing is a clean 3× signal at L2 depths.</p>
+
+<h3 id="hbm-the-penalty-disappears">HBM: The Penalty Disappears</h3>
+
+<p>I measured the same question at HBM depth. I created a pointer chase kernel that traversed a 150GB buffer. This is 82% of the total VRAM spanning both dies. Each read’s address depends on the previous read’s value, preventing pipelining or prefetching. Each block ran 2000 dependent reads and recorded total cycles. I divided by 2000 to get per read latency. The result was uniform across all offsets. 1231–1327 cycles per read (1.08× ratio) with no bimodal distribution.</p>
+
+<p><img src="/asset/images/06_latency_histogram.png" alt="Latency Histogram" /></p>
+
+<p><img src="/asset/images/07_latency_vs_offset.png" alt="Latency vs Offset" /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Buffer Size</th>
+      <th>Min cycles/read</th>
+      <th>Max cycles/read</th>
+      <th>Ratio</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>10 GB</td>
+      <td>447</td>
+      <td>484</td>
+      <td>1.08x</td>
+    </tr>
+    <tr>
+      <td>100 GB</td>
+      <td>1,230</td>
+      <td>1,322</td>
+      <td>1.07x</td>
+    </tr>
+    <tr>
+      <td>150 GB (spans both dies)</td>
+      <td>1,231</td>
+      <td>1,327</td>
+      <td>1.08x</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Recent work using an SM by memory region latency matrix measured an approximately 30 cycle cross die HBM penalty on B200 (<a href="https://arxiv.org/abs/2606.24934">link</a>). Against the roughly 1270 cycle HBM latency measured here, 30 cycles is only about 2.4%. That smaller effect could be obscured by normal latency variation and by averaging together accesses whose physical die locality was unknown.</p>
+
+<h2 id="wrapping-up">Wrapping Up</h2>
+
+<p>Blackwell brings some serious firepower. A fully decoupled Tensor Core with its own memory, 2.25 PFLOPS FP16, 9 PFLOPS FP4 and an interconnect that hides the two die penalty at HBM. But the tradeoffs are real. Tensor Core throughput has grown much faster than SFU throughput, scalar FP32 throughput remains unchanged and the epilogue is where register pressure actually lives. I’ll be working more with the B200 and sharing findings along the way.</p>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://news.futunn.com/en/post/70977069/semianalysis-in-depth-breakdown-full-details-of-the-blackwell-architecture">SemiAnalysis Blackwell Article</a></li>
+  <li><a href="https://arxiv.org/html/2603.05451v1">FlashAttention-4 Paper</a></li>
+  <li><a href="https://arxiv.org/pdf/2512.02189">Microbenchmarking NVIDIA’s Blackwell Paper</a></li>
+  <li><a href="https://images.nvidia.com/aem-dam/Solutions/geforce/blackwell/nvidia-rtx-blackwell-gpu-architecture.pdf">RTX Blackwell Architecture Report</a></li>
+  <li><a href="https://chipsandcheese.com/p/nvidias-b200-keeping-the-cuda-juggernaut">Chips and Cheese Blackwell Analysis</a></li>
+  <li><a href="https://mp.weixin.qq.com/s?__biz=MzUxNzQ5MTExNw==&amp;mid=2247496740&amp;idx=1&amp;sn=c9403138fa59d126fe6cfda19d9b2f76&amp;scene=21">WeChat: Blackwell Analysis and Rubin predictions</a></li>
+</ul>
+
+  </div><a class="u-url" href="/jekyll/update/2026/07/08/blackwell.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Learning Repository</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Learning Repository</li><li><a class="u-email" href="mailto:piyush.kumar.iaf@gmail.com">piyush.kumar.iaf@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/piyushK52"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">piyushK52</span></a></li><li><a href="https://www.twitter.com/thisispiyushK"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">thisispiyushK</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>Personal thoughts on what I see around. </p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
